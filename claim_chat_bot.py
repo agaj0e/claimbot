@@ -15,7 +15,7 @@ TELEGRAM_BOT_TOKEN = getenv("BOT_TOKEN")
 # Константы для API Mindbox
 API_URL = 'https://api.mindbox.ru/v3/operations/sync?endpointId=tui-epk&operation=OrderStatusChange.Mindbox'
 HEADERS = {
-    'Authorization': 'Mindbox secretKey="oqFruWFxZs4zuTMjstP3"'
+    'Authorization': 'Mindbox secretKey="XXXXXXXXXXX"'
 }
 
 # Состояния диалога
