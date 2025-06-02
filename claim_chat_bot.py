@@ -13,10 +13,10 @@ TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 # Включаем логирование
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-    level=logging.INFO
+    level=logging.WARNING
 )
 
-logger = logging.getLogger(__name__)
+logging.getLogger('telegram.ext').setLevel(logging.WARNING)
 
 # Ваш токен бота Telegram (убедитесь, что переменная окружения установлена)
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -69,7 +69,15 @@ async def handle_status_selection(update: Update, context: ContextTypes.DEFAULT_
 
     user = query.from_user
     status = query.data  # выбранный статус
+    claim = context.user_data.get('claim')
+    if not claim:
+        await query.edit_message_text("Ошибка: номер claim не найден. Пожалуйста, начните заново командой /start.")
+        return
 
+    print(f"Имя пользователя: {user.first_name or user.username}")
+    print(f"Status: {status}")
+    print(f"Claim: {claim}")
+    
     # Логируем информацию о пользователе и выбранном статусе
     logging.info(f"Статус выбран пользователем: {user.id} ({user.username}), статус: {status}")
 
