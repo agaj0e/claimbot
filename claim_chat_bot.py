@@ -3,22 +3,21 @@ import requests
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, MessageHandler, filters, ContextTypes
 
-# Включаем логирование
+# ЛОГИ В КОНСОЛЬ
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
 
-# Ваш токен бота Telegram
+# ПЕРЕМЕННАя ТОКЕНА
 TELEGRAM_BOT_TOKEN = getenv("BOT_TOKEN")
 
-# Константы для API Mindbox
-API_URL = 'https://api.mindbox.ru/v3/operations/sync?endpointId=tui-epk&operation=OrderStatusChange.Mindbox'
+# ЭНДПОИНТ И ТОКЕН АПИШКИ
+API_URL = 'https://api.mindbox.ru/v3/napishisvoyeendpoint'
 HEADERS = {
     'Authorization': 'Mindbox secretKey="XXXXXXXXXXX"'
 }
 
-# Состояния диалога
 ASK_CLAIM, ASK_STATUS = range(2)
 
 
@@ -27,7 +26,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "Привет! Я помогу вам изменить статус заказа.\n"
         "Пожалуйста, введите номер claim заказа:"
     )
-    # Устанавливаем состояние для ожидания claim
+ 
     return ASK_CLAIM
 
 
@@ -35,7 +34,8 @@ async def handle_claim(update: Update, context: ContextTypes.DEFAULT_TYPE):
     claim = update.message.text.strip()
     context.user_data['claim'] = claim
 
-    # Предлагаем выбрать статус заказа
+    # ВЫЮОР СТАТУСА
+    ЗАКАЗА
     keyboard = [
         [InlineKeyboardButton("Отменено", callback_data='Отменено')],
         [InlineKeyboardButton("Completed", callback_data='Completed')]
@@ -55,7 +55,7 @@ async def handle_status_selection(update: Update, context: ContextTypes.DEFAULT_
 
     claim = context.user_data.get('claim')
 
-    # Формируем payload для API
+    # ТЕЛО ЗАПРОСА
     payload = {
         "orderLinesStatus": status,
         "order": {
@@ -68,7 +68,7 @@ async def handle_status_selection(update: Update, context: ContextTypes.DEFAULT_
         }
     }
 
-    # Отправляем POST-запрос к API Mindbox
+    # КИДАЕМ ПОСТ К АПИШКЕ
     try:
         response = requests.post(API_URL, headers=HEADERS, json=payload)
         if response.status_code == 200:
@@ -83,16 +83,16 @@ async def handle_status_selection(update: Update, context: ContextTypes.DEFAULT_
 def main():
     application = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 
-    # Обработчики команд и сообщений
+    # КОМАНДЫ ЗАПУСКА БОТА
     application.add_handler(CommandHandler('start', start))
 
-    # Обработка ввода claim (номер заказа)
+    #(номер заказа)
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_claim))
 
-    # Обработка выбора статуса через inline-кнопки
+    # ОБРАБОТКА КНОПКИ
     application.add_handler(CallbackQueryHandler(handle_status_selection))
 
-    # Запуск бота
+    
     application.run_polling()
 
 
