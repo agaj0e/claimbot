@@ -11,11 +11,12 @@ logging.basicConfig(
 
 # ПЕРЕМЕННАя ТОКЕНА
 TELEGRAM_BOT_TOKEN = getenv("BOT_TOKEN")
+MB_SECRET_KEY = getenv("SECRET_KEY")
 
 # ЭНДПОИНТ И ТОКЕН АПИШКИ
 API_URL = 'https://api.mindbox.ru/v3/napishisvoyeendpoint'
 HEADERS = {
-    'Authorization': 'Mindbox secretKey="XXXXXXXXXXX"'
+    'Authorization': 'Mindbox secretKey="{SECRET_KEY}"'
 }
 
 ASK_CLAIM, ASK_STATUS = range(2)
